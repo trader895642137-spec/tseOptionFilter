@@ -134,6 +134,8 @@ const CONSTS = {
     }
 }
 
+
+let notifiedStrategyList=[];
 let tempIgnoredNotifList = [];
 const ETF_LIST = ['اهرم', 'توان', 'موج', 'جهش'];
 const isETF = (symbol) => ETF_LIST.some(_etfName => symbol === _etfName);
@@ -236,6 +238,8 @@ const showNotification = ({title, body, tag}) => {
     })
 }
 
+
+
 const checkProfitsAnNotif = ({sortedStrategies}) => {
 
     const foundStrategy = sortedStrategies.find(strategy => strategy.expectedProfitNotif && strategy.profitPercent > 0);
@@ -247,6 +251,8 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
     const filterSymbolList = getFilterSymbols();
 
     const opportunities = sortedStrategies.filter(strategy => {
+         if (!strategy.expectedProfitNotif)
+            return
 
         if (tempIgnoredNotifList.find(_strategyName => _strategyName === strategy.name))
             return
@@ -255,7 +261,7 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
         if (filterSymbolList.length && !filterSymbolList.find(filteredSymbol => strategy.name.includes(filteredSymbol)))
             return
 
-        const stategySymbols = strategy.positions.map(pos=>pos.symbol);
+        const strategySymbols = strategy.positions.map(pos=>pos.symbol);
         
         if (ignoreStrategyList.find(ignoreStrategyObj => {
             if (!ignoreStrategyObj?.name)
@@ -264,7 +270,7 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
                     return false
             if(ignoreStrategyObj.name === strategy.name) return true
             
-            return  stategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name))
+            return  strategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name))
         }
         ))
             return
@@ -275,9 +281,12 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
     if (!opportunities.length)
         return
 
+
+    notifiedStrategyList = [].concat(opportunities);
+
     showNotification({
         title: `سود ${foundStrategy.strategyTypeTitle} بالای ${((foundStrategy.profitPercent) * 100).toFixed()} درصد`,
-        body: `${sortedStrategies.filter(strategy => strategy.profitPercent > 0).map(strategy => strategy.name).join('#')}`,
+        body: `${foundStrategy.strategyTypeTitle} ${foundStrategy.name}`,
         tag: `profit`
     })
 
@@ -5020,7 +5029,7 @@ const createListFilterContetnByList=(list)=>{
         // minStockPriceDistanceFromHigherStrikeInPercent: .22,
     }), ]
 
-    htmlContent += strategyMapList.map( ({allStrategiesSorted, htmlTitle, expectedProfitNotif}) => {
+    let allStrategyListObject  = strategyMapList.map( ({allStrategiesSorted, htmlTitle, expectedProfitNotif}) => {
         let filteredStrategies = allStrategiesSorted.filter(strategy => {
             if (strategy.profitPercent < 0)
                 return false
@@ -5080,18 +5089,27 @@ const createListFilterContetnByList=(list)=>{
         }
         )
 
-        checkProfitsAnNotif({
-            sortedStrategies: filteredStrategies
-        });
 
-        return htmlStrategyListCreator({
-            strategyList: filteredStrategies,
-            title: htmlTitle,
-            expectedProfitNotif
-        });
+        return {
+            htmlContent: htmlStrategyListCreator({
+                strategyList: filteredStrategies,
+                title: htmlTitle,
+                expectedProfitNotif
+            }),
+            filteredStrategies,
+            expectedProfitNotif,
+            htmlTitle
+        }
+
 
     }
-    ).join('');
+    )
+
+    checkProfitsAnNotif({
+            sortedStrategies: allStrategyListObject.flatMap(strategyObj=>strategyObj.filteredStrategies)
+    });
+
+    htmlContent +=  allStrategyListObject.map(strategyObj=>strategyObj.htmlContent).join('');
 
     setFiltersContent(htmlContent)
 
@@ -5360,7 +5378,14 @@ const interval = () => {
         
         newTabList.forEach(childWindowTab=>{
             const  generalIgnoreText = getGeneralIgnoreText();
-            childWindowTab.document.readyState === "complete" && childWindowTab.postMessage({ list ,generalIgnoreText ,$tempIgnoredNotifList: tempIgnoredNotifList}, "*");
+            if(childWindowTab.document.readyState === "complete"){
+                childWindowTab.postMessage({ 
+                    list ,
+                    generalIgnoreText ,
+                    $tempIgnoredNotifList: tempIgnoredNotifList,
+                    $notifiedStrategyList :notifiedStrategyList
+                }, "*");
+            }
         });
     }
 
@@ -5437,10 +5462,14 @@ const RUN = () => {
     injectStyles();
 
     window.addEventListener("message", (event) => {
-        const { list ,generalIgnoreText='' ,$tempIgnoredNotifList=[] } = event.data;
+        const { list ,generalIgnoreText='' ,$tempIgnoredNotifList=[],$notifiedStrategyList=[] } = event.data;
         if(!list?.length) return 
 
-        $tempIgnoredNotifList.forEach(_strategyName=> !tempIgnoredNotifList.includes(_strategyName) &&  ignoreStrategyTemporary(_strategyName))
+
+        const notifiedStrategyNameList = $notifiedStrategyList.map(s=>s.name);
+        
+
+        $tempIgnoredNotifList.concat(notifiedStrategyNameList).forEach(_strategyName=> !tempIgnoredNotifList.includes(_strategyName) &&  ignoreStrategyTemporary(_strategyName))
 
 
         setGeneralIgnoreText(generalIgnoreText)
