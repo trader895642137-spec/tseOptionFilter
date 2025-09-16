@@ -135,7 +135,8 @@ const CONSTS = {
 }
 
 
-let notifiedStrategyList=[];
+let notifiedStrategyList = [];
+let isSilentModeActive = false;
 let tempIgnoredNotifList = [];
 const ETF_LIST = ['اهرم', 'توان', 'موج', 'جهش'];
 const isETF = (symbol) => ETF_LIST.some(_etfName => symbol === _etfName);
@@ -241,6 +242,10 @@ const showNotification = ({title, body, tag}) => {
 
 
 const checkProfitsAnNotif = ({sortedStrategies}) => {
+
+    if(isSilentModeActive){
+        return 
+    }
 
     const foundStrategy = sortedStrategies.find(strategy => strategy.expectedProfitNotif && strategy.profitPercent > 0);
 
@@ -4727,7 +4732,7 @@ const createListFilterContetnByList=(list)=>{
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 3 * 24 * 3600000,
         minStockPriceDistanceFromHigherStrikeInPercent: .12,
-        expectedProfitNotif: true,
+        // expectedProfitNotif: true,
     }),
 
 
@@ -4741,7 +4746,7 @@ const createListFilterContetnByList=(list)=>{
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 3 * 24 * 3600000,
         minStockPriceDistanceFromHigherStrikeInPercent: .12,
-        expectedProfitNotif: true,
+        // expectedProfitNotif: true,
     }),
 
 
@@ -5285,6 +5290,38 @@ const getMainContainer = () => {
 
         mainContainer.append(contentPanel);
 
+        let silentButton = document.createElement('button');
+
+
+        silentButton.style.cssText += `
+            position: absolute;
+            left: 7px;
+            width: auto;
+            cursor: pointer;
+            z-index: 500000;
+            height: auto;
+        `;
+
+        silentButton.appendChild(document.createTextNode("سکوت موقت"))
+
+ 
+        let silentButtonTimeoutID;
+        silentButton.addEventListener('click', (event) => {
+            clearTimeout(silentButtonTimeoutID);
+
+            isSilentModeActive = true;
+
+            silentButtonTimeoutID = setTimeout( () => {
+                isSilentModeActive = false;
+            }
+            , 160000);
+
+           
+        });
+
+
+        mainContainer.append(silentButton);
+
         return mainContainer
 
     }
@@ -5379,6 +5416,7 @@ const interval = () => {
         newTabList.forEach(childWindowTab=>{
             const  generalIgnoreText = getGeneralIgnoreText();
             if(childWindowTab.document.readyState === "complete"){
+                //notifiedStrategyList=[]
                 childWindowTab.postMessage({ 
                     list ,
                     generalIgnoreText ,
