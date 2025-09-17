@@ -5294,12 +5294,15 @@ const getMainContainer = () => {
 
 
         silentButton.style.cssText += `
-            position: absolute;
-            left: 7px;
-            width: auto;
-            cursor: pointer;
-            z-index: 500000;
-            height: auto;
+                position: absolute;
+                left: 7px;
+                width: auto;
+                cursor: pointer;
+                z-index: 500000;
+                height: auto;
+                padding: 7px;
+                font-size: large;
+                font-weight: bold;
         `;
 
         silentButton.appendChild(document.createTextNode("سکوت موقت"))
