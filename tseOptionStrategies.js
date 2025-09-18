@@ -4903,29 +4903,6 @@ const createListFilterContetnByList=(list)=>{
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
-        // minStockMiddleDistanceInPercent:-0.06,
-        // maxStockMiddleDistanceInPercent:0.06,
-        BUCSSOptionListIgnorer: ({option, minVol}) => {
-            if (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ض') || option.vol < minVol)
-                return true
-
-            const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
-            // if (stockStrikeDistanceInPercent < -.06) return true
-            // if (stockStrikeDistanceInPercent > .15) return true
-            return false
-        }
-        ,
-        minProfitLossRatio: .9,
-        // expectedProfitNotif: true
-        // minVol: 1000 * 1000 * 1000,
-        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
-    }), calcBUTT_CONDORStrategies(list, {
-        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
-        min_time_to_settlement: 1 * 24 * 3600000,
-        max_time_to_settlement: 63 * 24 * 3600000,
-        // MIN_BUCS_BECS_diffStrikesRatio:1,
-        // MAX_BUCS_BECS_diffStrikesRatio:1,
-        // maxStockStrike4DistanceInPercent:-0.05,
         minStockMiddleDistanceInPercent: -0.1,
         maxStockMiddleDistanceInPercent: 0.1,
         BUCSSOptionListIgnorer: ({option, minVol}) => {
