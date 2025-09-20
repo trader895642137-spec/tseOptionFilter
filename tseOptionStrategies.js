@@ -2789,7 +2789,7 @@ const calcPUT_BUTTERFLYStrategies = (list, {priceType, settlementGainChoosePrice
                         } else {
                             let maxGainPrice = option2.optionDetails?.strikePrice;
 
-                            const BEPS_Gain = BUPS_BEPS_diffStrikesRatio * ( (option4.optionDetails?.strikePrice - Math.max(maxGainPrice, option3.optionDetails?.strikePrice) ) + totalBEPS_CostWithSign)
+                            const BEPS_Gain = BUPS_BEPS_diffStrikesRatio *  MAX_BEPS_Gain
 
                             const BUPS_Gain =  BUPS_OpenPositionGain;
 
@@ -3078,7 +3078,7 @@ const calcPUT_CONDORStrategies = (list, {priceType, settlementGainChoosePriceTyp
                             } else {
                                 let maxGainPrice = option2.optionDetails?.strikePrice;
 
-                                const BEPS_Gain = BUPS_BEPS_diffStrikesRatio * ( (option4.optionDetails?.strikePrice - Math.max(maxGainPrice, option3.optionDetails?.strikePrice) ) + totalBEPS_CostWithSign)
+                                const BEPS_Gain = BUPS_BEPS_diffStrikesRatio * (MAX_BEPS_Gain - (maxGainPrice > option3.optionDetails?.strikePrice ? (maxGainPrice - option3.optionDetails?.strikePrice) : 0));
 
                                 const BUPS_Gain =  BUPS_OpenPositionGain;
 
@@ -5500,7 +5500,7 @@ const calcPUT_BUTT_CONDORStrategies = (list, {priceType, settlementGainChoosePri
                             } else {
                                 let maxGainPrice = option2.optionDetails?.strikePrice;
 
-                                const BEPS_Gain = BUPS_BEPS_diffStrikesRatio * ( (option4.optionDetails?.strikePrice - Math.max(maxGainPrice, option3.optionDetails?.strikePrice) ) + totalBEPS_CostWithSign)
+                                const BEPS_Gain = BUPS_BEPS_diffStrikesRatio * (MAX_BEPS_Gain - (maxGainPrice > option3.optionDetails?.strikePrice ? (maxGainPrice - option3.optionDetails?.strikePrice) : 0));
 
                                 const BUPS_Gain =  BUPS_OpenPositionGain;
 
