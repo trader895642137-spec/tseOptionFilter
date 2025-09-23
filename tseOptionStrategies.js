@@ -144,8 +144,8 @@ const isETF = (symbol) => ETF_LIST.some(_etfName => symbol === _etfName);
 let prevListSymbolMap = {};
 
 let generalConfig = {
-    expectedProfitPerMonth: 1.05,
-    minProfitToFilter: 0.04,
+    expectedProfitPerMonth: 1.04,
+    minProfitToFilter: 0.035,
     BUCSSOptionListIgnorer: ({option, minVol}) => {
         return (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ض') || option.vol < minVol || option.optionDetails.stockSymbolDetails.last < option.optionDetails.strikePrice)
     }
@@ -7754,7 +7754,7 @@ const createListFilterContetnByList=(list)=>{
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 0,
         max_time_to_settlement: 2 * 24 * 3600000,
-        expectedProfitPerMonth: 1.05,
+        expectedProfitPerMonth: 1.02,
         expectedProfitNotif: true,
     }),
     
@@ -7769,7 +7769,7 @@ const createListFilterContetnByList=(list)=>{
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 0,
         max_time_to_settlement: 2 * 24 * 3600000,
-        expectedProfitPerMonth: 1.05,
+        expectedProfitPerMonth: 1.02,
         expectedProfitNotif: true,
     }), calcBECSStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
