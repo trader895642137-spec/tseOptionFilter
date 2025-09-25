@@ -334,9 +334,12 @@ const htmlStrategyListCreator = ({strategyList, title, expectedProfitNotif}) => 
                     
                 ">
                 ${strategyList.map(_strategyObj => {
+                    const  strategyFullSymbolNames = _strategyObj.positions.map(opt=>opt.symbol).join('-'); 
+                    
         return `
                     <div style="display:flex;column-gap: 5px;    font-size: 16px;">
-                        <span class="strategy-name" data-base-strategy-type="${_strategyObj.strategyTypeTitle}">${_strategyObj.name}</span> 
+                        <span class="strategy-name" data-base-strategy-type="${_strategyObj.strategyTypeTitle}" 
+                            data-base-strategy-full-symbol-names="${strategyFullSymbolNames}" >${_strategyObj.name}</span> 
                         <span style="margin-right:auto ;color:${_strategyObj.profitPercent > 0 ? '#005d00' : 'red'}">%${(_strategyObj.profitPercent * 100).toFixed(1)}</span>
                     </div>
                             
@@ -8336,8 +8339,9 @@ const getMainContainer = () => {
 
                 const strategyName = event.target.innerHTML;
                 const strategyType = event.target.getAttribute("data-base-strategy-type");
+                const strategyFullSymbolNames = event.target.getAttribute("data-base-strategy-full-symbol-names");
 
-                navigator?.clipboard?.writeText(`${strategyType}@${strategyName}`)
+                navigator?.clipboard?.writeText(`${strategyType}@${strategyFullSymbolNames}`)
 
                 ignoreStrategyTemporary(strategyName);
                 
