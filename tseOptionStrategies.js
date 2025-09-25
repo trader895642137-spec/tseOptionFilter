@@ -7296,11 +7296,60 @@ const createListFilterContetnByList=(list)=>{
         minStockPriceDistanceFromPutStrikeInPercent: .15,
         // expectedProfitNotif: true
     })
-    
     , calcCALL_BUTTERFLYStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.isCallOption || option.vol < minVol)
+                return true
+
+            // const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.04) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+    
+    , calcCALL_BUTTERFLYStrategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.isCallOption || option.vol < minVol)
+                return true
+
+            // const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.04) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+
+    , calcCALL_CONDORStrategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
@@ -7325,7 +7374,7 @@ const createListFilterContetnByList=(list)=>{
 
     , calcCALL_CONDORStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
-        min_time_to_settlement: 1 * 24 * 3600000,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7352,7 +7401,7 @@ const createListFilterContetnByList=(list)=>{
     , calcCALL_BUTT_CONDORStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
-        max_time_to_settlement: 63 * 24 * 3600000,
+        // max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
@@ -7376,7 +7425,57 @@ const createListFilterContetnByList=(list)=>{
     , calcPUT_BUTTERFLYStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ط') || option.vol < minVol)
+                return true
+
+            const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.04) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+
+    , calcPUT_BUTTERFLYStrategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ط') || option.vol < minVol)
+                return true
+
+            const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.04) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+
+    , calcPUT_CONDORStrategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
@@ -7399,7 +7498,7 @@ const createListFilterContetnByList=(list)=>{
     })
     , calcPUT_CONDORStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
-        min_time_to_settlement: 1 * 24 * 3600000,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7425,7 +7524,7 @@ const createListFilterContetnByList=(list)=>{
     , calcPUT_BUTT_CONDORStrategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
-        max_time_to_settlement: 63 * 24 * 3600000,
+        // max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
@@ -7446,10 +7545,34 @@ const createListFilterContetnByList=(list)=>{
         // minStockPriceDistanceFromHigherStrikeInPercent: .22,
     })
     
-
     , calcIRON_BUTTERFLY_BUCS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        // TODO: ignorer of option1
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ض') || option.vol < minVol)
+                return true
+
+            // const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.06) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+    , calcIRON_BUTTERFLY_BUCS_Strategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7476,6 +7599,31 @@ const createListFilterContetnByList=(list)=>{
     , calcIRON_CONDOR_BUCS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        // TODO: ignorer of option1
+        BUCSSOptionListIgnorer: ({option, minVol}) => {
+            if (!option.optionDetails?.stockSymbolDetails || !option.symbol.startsWith('ض') || option.vol < minVol)
+                return true
+
+            // const stockStrikeDistanceInPercent = (option.optionDetails.stockSymbolDetails.last / option.optionDetails?.strikePrice) - 1;
+            // if (stockStrikeDistanceInPercent < -.06) return true
+            // if (stockStrikeDistanceInPercent > .15) return true
+            return false
+        }
+        ,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+    , calcIRON_CONDOR_BUCS_Strategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7502,7 +7650,7 @@ const createListFilterContetnByList=(list)=>{
    , calcIRON_BUTT_CONDOR_BUCS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
-        max_time_to_settlement: 63 * 24 * 3600000,
+        // max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
@@ -7527,6 +7675,21 @@ const createListFilterContetnByList=(list)=>{
     , calcIRON_BUTTERFLY_BUPS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+
+    , calcIRON_BUTTERFLY_BUPS_Strategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7542,6 +7705,21 @@ const createListFilterContetnByList=(list)=>{
     , calcIRON_CONDOR_BUPS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
+        max_time_to_settlement: 35 * 24 * 3600000,
+        // MIN_BUCS_BECS_diffStrikesRatio:1,
+        // MAX_BUCS_BECS_diffStrikesRatio:1,
+        // maxStockStrike4DistanceInPercent:-0.05,
+        minStockMiddleDistanceInPercent: -0.1,
+        maxStockMiddleDistanceInPercent: 0.1,
+        minProfitLossRatio: .7,
+        // expectedProfitNotif: true
+        // minVol: 1000 * 1000 * 1000,
+        // minStockPriceDistanceFromHigherStrikeInPercent: .22,
+    })
+
+    , calcIRON_CONDOR_BUPS_Strategies(list, {
+        priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
+        min_time_to_settlement: 35 * 24 * 3600000,
         max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
@@ -7556,7 +7734,6 @@ const createListFilterContetnByList=(list)=>{
     , calcIRON_BUTT_CONDOR_BUPS_Strategies(list, {
         priceType: CONSTS.PRICE_TYPE.BEST_PRICE,
         min_time_to_settlement: 1 * 24 * 3600000,
-        max_time_to_settlement: 63 * 24 * 3600000,
         // MIN_BUCS_BECS_diffStrikesRatio:1,
         // MAX_BUCS_BECS_diffStrikesRatio:1,
         // maxStockStrike4DistanceInPercent:-0.05,
