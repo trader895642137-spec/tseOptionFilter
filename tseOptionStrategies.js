@@ -273,7 +273,9 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
                 return false
             if (ignoreStrategyObj.type !== 'ALL' && ignoreStrategyObj.type !== strategy.strategyTypeTitle)
                     return false
-            if(ignoreStrategyObj.name === strategy.name) return true
+
+            const  strategyFullSymbolNames = strategy.positions.map(opt=>opt.symbol).join('-'); 
+            if(ignoreStrategyObj.name === strategyFullSymbolNames) return true
             
             return  strategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name))
         }
@@ -8132,9 +8134,9 @@ const createListFilterContetnByList=(list)=>{
                 if (ignoreStrategyObj.type !== 'ALL' && ignoreStrategyObj.type !== strategy.strategyTypeTitle)
                     return false
                 
-               
+               const  strategyFullSymbolNames = strategy.positions.map(opt=>opt.symbol).join('-'); 
 
-                if(ignoreStrategyObj.name===strategy.name) return true
+                if(ignoreStrategyObj.name===strategyFullSymbolNames) return true
                 if (strategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name)))
                     return true
                 
