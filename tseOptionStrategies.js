@@ -658,7 +658,7 @@ const calcBOXStrategies = (list, {priceType, expectedProfitPerMonth, min_time_to
                         option: {
                             ...option
                         },
-                        positions:[option, sameHighStrikePut,higherStrikeOption,sameLowStrikePut],
+                        positions:[option,higherStrikeOption, sameLowStrikePut,sameHighStrikePut],
                         strategyTypeTitle: "BOX",
                         expectedProfitNotif,
                         expectedProfitPerMonth,
@@ -1511,6 +1511,14 @@ const calcBUPSStrategies = (list, {priceType, expectedProfitPerMonth, settlement
                 }))
                     return option
 
+
+                const optionPrice = getPriceOfAsset({
+                    asset: option,
+                    priceType,
+                    sideType: 'BUY'
+                });
+
+                if(optionPrice===0) return option
                
 
                 const optionListWithHigherStrikePrice = optionListOfSameDate.filter(_option => {
@@ -1527,7 +1535,19 @@ const calcBUPSStrategies = (list, {priceType, expectedProfitPerMonth, settlement
 
                 let allPossibleStrategies = optionListWithHigherStrikePrice.reduce( (_allPossibleStrategies, _option) => {
 
-                     const stockPriceHigherStrikeRatio = (option.optionDetails.stockSymbolDetails.last / _option.optionDetails?.strikePrice) - 1;
+
+
+
+                    const _optionPrice = getPriceOfAsset({
+                        asset: _option,
+                        priceType,
+                        sideType: 'SELL'
+                    });
+
+                    if(_optionPrice===0) return _allPossibleStrategies
+
+
+                    const stockPriceHigherStrikeRatio = (option.optionDetails.stockSymbolDetails.last / _option.optionDetails?.strikePrice) - 1;
 
                     if (stockPriceHigherStrikeRatio < minStockPriceDistanceInPercent || stockPriceHigherStrikeRatio > maxStockPriceDistanceInPercent)
                         return _allPossibleStrategies
