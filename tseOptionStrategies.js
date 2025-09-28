@@ -202,6 +202,34 @@ optionType="call"// "call" یا "put"
 
 }
 
+
+
+const isStrategyIgnored = (strategy,ignoreStrategyList) => {
+
+    
+    if (!ignoreStrategyList?.length) return
+    const strategySymbols = strategy.positions.map(pos => pos.symbol);
+
+    return ignoreStrategyList.find(ignoreStrategyObj => {
+
+        if (ignoreStrategyObj.type !== 'ALL' && ignoreStrategyObj.type !== strategy.strategyTypeTitle)
+            return false
+
+        const strategyFullSymbolNames = strategy.positions.map(opt => opt.symbol).join('-');
+
+        if (!ignoreStrategyObj.name && ignoreStrategyObj.type === strategy.strategyTypeTitle) return true
+
+        if (ignoreStrategyObj.name === strategyFullSymbolNames) return true
+        if (strategySymbols.some(symbol => symbol.includes(ignoreStrategyObj.name)))
+            return true
+
+    }
+    )
+
+}
+
+
+
 const calcSumOfMargins = (options) => {
     return options.reduce( (_sum, option) => {
 
@@ -252,8 +280,9 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
     if (!foundStrategy)
         return
 
-    const ignoreStrategyList = getIgnoreStrategyNames();
     const filterSymbolList = getFilterSymbols();
+
+    const ignoreStrategyList = getIgnoreStrategyNames();
 
     const opportunities = sortedStrategies.filter(strategy => {
          if (!strategy.expectedProfitNotif)
@@ -266,21 +295,9 @@ const checkProfitsAnNotif = ({sortedStrategies}) => {
         if (filterSymbolList.length && !filterSymbolList.find(filteredSymbol => strategy.name.includes(filteredSymbol)))
             return
 
-        const strategySymbols = strategy.positions.map(pos=>pos.symbol);
         
-        if (ignoreStrategyList.find(ignoreStrategyObj => {
-            if (!ignoreStrategyObj?.name)
-                return false
-            if (ignoreStrategyObj.type !== 'ALL' && ignoreStrategyObj.type !== strategy.strategyTypeTitle)
-                    return false
-
-            const  strategyFullSymbolNames = strategy.positions.map(opt=>opt.symbol).join('-'); 
-            if(ignoreStrategyObj.name === strategyFullSymbolNames) return true
-            
-            return  strategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name))
-        }
-        ))
-            return
+        if (isStrategyIgnored(strategy,ignoreStrategyList))
+            return false
         return true
     }
     );
@@ -8118,6 +8135,8 @@ const createListFilterContetnByList=(list)=>{
         // minStockPriceDistanceFromHigherStrikeInPercent: .22,
     }), ]
 
+    
+
     let allStrategyListObject  = strategyMapList.map( ({allStrategiesSorted, htmlTitle, expectedProfitNotif}) => {
         let filteredStrategies = allStrategiesSorted.filter(strategy => {
             if (strategy.profitPercent < 0)
@@ -8141,28 +8160,16 @@ const createListFilterContetnByList=(list)=>{
         }
         );
 
-        const ignoreStrategyList = getIgnoreStrategyNames();
+        
         const filterSymbolList = getFilterSymbols();
+        const ignoreStrategyList = getIgnoreStrategyNames();
 
         filteredStrategies = filteredStrategies.filter(strategy => {
             if (filterSymbolList.length && !filterSymbolList.find(filteredSymbol => strategy.name.includes(filteredSymbol)))
-                return
-            const strategySymbols = strategy.positions.map(pos=>pos.symbol);
-            if (ignoreStrategyList.find(ignoreStrategyObj => {
-
-                if(!ignoreStrategyObj.name) return
-                if (ignoreStrategyObj.type !== 'ALL' && ignoreStrategyObj.type !== strategy.strategyTypeTitle)
-                    return false
-                
-               const  strategyFullSymbolNames = strategy.positions.map(opt=>opt.symbol).join('-'); 
-
-                if(ignoreStrategyObj.name===strategyFullSymbolNames) return true
-                if (strategySymbols.some(symbol=>symbol.includes(ignoreStrategyObj.name)))
-                    return true
-                
-            }
-            ))
-                return
+                return false
+            
+            if (isStrategyIgnored(strategy,ignoreStrategyList))
+                return false
             return true
         }
         );
